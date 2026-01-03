@@ -15,6 +15,7 @@ const injectScript_str = `<script>(${injectScript.toString()})();</script>`
 
 export class DevServer {
   readonly config: Required<ServerConfig>
+  readonly port: number
   private app: express.Application
   private server: http.Server
   private wss: WebSocketServer
@@ -33,8 +34,9 @@ export class DevServer {
       watchPaths: config.watchPaths.map(p => path.resolve(process.cwd(), p)),
       removeSrcPrefix: config.removeSrcPrefix || []
     }
-    logger.debug('Server configuration:', this.config)
-    logger.info(`目标文件：${this.config.htmlPath}`)
+    this.port = this.config.port
+    logger.debug(`[${logger.magenta(this.port)}] Server configuration:`, this.config)
+    logger.info(`[${logger.magenta(this.port)}] 目标文件：${this.config.htmlPath}`)
 
     this.app = express()
     this.server = http.createServer(this.app)
@@ -56,14 +58,14 @@ export class DevServer {
       ...this.config.staticDirs
     ]
     this.app.get('/', (req, res) => {
-      // logger.info(req.method + ' ' + req.path)
+      // logger.info(`[${logger.magenta(this.port)}] ${req.method} ${req.path}`)
       this.serveHtmlFile(res)
     })
     this.app.get('/favicon.ico', (req, res) => {
       res.status(204).end()
     })
     this.app.get('*', (req, res, next) => {
-      // logger.info(req.method + ' ' + req.path)
+      // logger.info(`[${logger.magenta(this.port)}] ${req.method} ${req.path}`)
       // 如果有文件扩展名，可能是静态文件，交给下一个中间件处理
       if (req.path.includes('.') && !req.path.endsWith('.html')) {
         return next()
@@ -75,9 +77,9 @@ export class DevServer {
     uniqueDirs.forEach(dir => {
       if (fs.existsSync(dir)) {
         this.app.use(express.static(dir))
-        logger.info(`静态资源：${dir}`)
+        logger.info(`[${logger.magenta(this.port)}] 静态资源：${dir}`)
       } else {
-        logger.warn(`静态资源不存在：${dir}`)
+        logger.warn(`[${logger.magenta(this.port)}] 静态资源不存在：${dir}`)
       }
     })
   }
@@ -96,7 +98,7 @@ export class DevServer {
       res.setHeader('Expires', '0')
       res.setHeader('Content-Type', 'text/html; charset=utf-8')
       res.send(injectedHtml)
-      logger.info(`发送目标页面：${this.config.htmlPath}`)
+      logger.info(`[${logger.magenta(this.port)}] 发送目标页面：${this.config.htmlPath}`)
     } catch (error) {
       res.status(500).send(`...`)
     }
@@ -129,7 +131,7 @@ export class DevServer {
   private setupWebSocket(): void {
     this.wss.on('connection', (ws: WebSocket) => {
       this.clients.add(ws)
-      logger.info(`ws新连接，当前连接数：${this.clients.size}`)
+      logger.info(`[${logger.magenta(this.port)}] ws成功连接，当前连接数：${this.clients.size}`)
       const welcomeMsg: ServerMessage = { type: 'CONNECTED', timestamp: Date.now() }
       ws.send(JSON.stringify(welcomeMsg))
       ws.on('message', (data: Buffer) => {
@@ -137,15 +139,15 @@ export class DevServer {
           const message: ClientMessage = JSON.parse(data.toString())
           this.handleClientMessage(ws, message)
         } catch (error) {
-          logger.error(`Error parsing client message: ${error}`)
+          logger.error(`[${logger.magenta(this.port)}] Error parsing client message: ${error}`)
         }
       })
       ws.on('close', () => {
         this.clients.delete(ws)
-        logger.info(`ws断开连接，当前连接数：${this.clients.size}`)
+        logger.info(`[${logger.magenta(this.port)}] ws断开连接，当前连接数：${this.clients.size}`)
       })
       ws.on('error', (error) => {
-        logger.error(`WebSocket error: ${error}`)
+        logger.error(`[${logger.magenta(this.port)}] WebSocket error: ${error}`)
       })
     })
   }
@@ -168,10 +170,10 @@ export class DevServer {
         ws.send(JSON.stringify(pongMsg))
         break
       case 'VISIBLE':
-        logger.info('Client became visible', 'info')
+        logger.info(`[${logger.magenta(this.port)}] Client became visible`, 'info')
         break
       default:
-        logger.warn(`Unknown message type: ${message.type}`)
+        logger.warn(`[${logger.magenta(this.port)}] Unknown message type: ${message.type}`)
     }
   }
 
@@ -190,16 +192,16 @@ export class DevServer {
         .on('add', (filePath: string) => this.handleFileChange('add', filePath))
         .on('change', (filePath: string) => this.handleFileChange('change', filePath))
         .on('unlink', (filePath: string) => this.handleFileChange('unlink', filePath))
-        .on('error', (error) => logger.error(`Watcher error: ${error}`))
+        .on('error', (error) => logger.error(`[${logger.magenta(this.port)}] Watcher error: ${error}`))
 
-      logger.info(`监听文件：${this.config.watchPaths.join(', ')}`)
+      logger.info(`[${logger.magenta(this.port)}] 监听文件：${this.config.watchPaths.join(', ')}`)
     } catch (error) {
-      logger.error(`监听文件错误：${error}`)
+      logger.error(`[${logger.magenta(this.port)}] 监听文件错误：${error}`)
     }
   }
 
   private handleFileChange(event: string, filePath: string): void {
-    logger.info(`文件${event}：${filePath}`)
+    logger.info(`[${logger.magenta(this.port)}] 文件${event}：${filePath}`)
     // 发送刷新指令给所有客户端
     const message: ServerMessage = {
       type: 'RELOAD',
@@ -228,7 +230,7 @@ export class DevServer {
           message.type = 'FILE_CHANGED'
       }
     }
-    logger.debug('Broadcast message:', message)
+    logger.debug(`[${logger.magenta(this.port)}] Broadcast message:`, message)
     this.broadcast(message)
   }
 
@@ -256,13 +258,13 @@ export class DevServer {
         sentCount++
       }
     })
-    logger.info(`广播${message.type}消息到${sentCount}个客户端`)
+    logger.info(`[${logger.magenta(this.port)}] 广播${message.type}消息到${sentCount}个客户端`)
   }
 
   public start(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.server.listen(this.config.port, () => {
-        logger.info(`开发服务已启动：${this.url}`)
+        logger.info(`[${logger.magenta(this.port)}] 开发服务已启动：${this.url}`)
         // 自动打开浏览器
         if (this.config.openBrowser) {
           this.openBrowser(this.url)
@@ -294,7 +296,7 @@ export class DevServer {
     }
     exec(command, (error) => {
       if (error) {
-        logger.warn(`Failed to open browser: ${error.message}`)
+        logger.warn(`[${logger.magenta(this.port)}] Failed to open browser: ${error.message}`)
       }
     })
   }
@@ -307,7 +309,7 @@ export class DevServer {
       this.clients.forEach(client => client.close())
       this.wss.close()
       this.server.close(() => {
-        logger.info('Server stopped')
+        logger.info(`[${logger.magenta(this.port)}] Server stopped`)
         resolve()
       })
     })
