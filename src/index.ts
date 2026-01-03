@@ -31,6 +31,7 @@ export class DevServer {
       staticDirs: config.staticDirs?.map(p => path.resolve(process.cwd(), p)) || [],
       htmlPath: path.resolve(process.cwd(), config.htmlPath),
       watchPaths: config.watchPaths.map(p => path.resolve(process.cwd(), p)),
+      removeSrcPrefix: config.removeSrcPrefix || []
     }
     logger.debug('Server configuration:', this.config)
     logger.info(`目标文件：${this.config.htmlPath}`)
@@ -102,6 +103,17 @@ export class DevServer {
   }
 
   private injectAutoReloadScript(html: string): string {
+    if (this.config.removeSrcPrefix.length) {
+      html = html.replace(/(src|href)=["']([^"']+)["']/g, (match, p1, p2) => {
+        let modifiedPath = p2
+        this.config.removeSrcPrefix.forEach(prefix => {
+          if (modifiedPath.startsWith(prefix)) {
+            modifiedPath = modifiedPath.slice(prefix.length)
+          }
+        })
+        return `${p1}="${modifiedPath}"`
+      })
+    }
     // 尝试在</body>前注入
     if (html.includes('</body>')) {
       return html.replace('</body>', injectScript_str + '\n</body>')
@@ -263,7 +275,11 @@ export class DevServer {
     })
   }
 
-  private openBrowser(url: string): void {
+  public openBrowser(url: string = this.url): void {
+    if (this.wss.clients.size > 0 && Array.from(this.wss.clients).some(client => client.readyState === WebSocket.OPEN)) {
+      // 已有客户端连接，跳过自动打开浏览器
+      return
+    }
     const platform = process.platform
     let command: string
     switch (platform) {
@@ -396,6 +412,17 @@ export class DevServerManager {
   }
 
   /**
+   * 打开指定端口服务器的浏览器
+   * @param port 端口号
+   */
+  openBrowser(port: number): void {
+    const server = this.getServer(port)
+    if (server) {
+      server.openBrowser(server.url)
+    }
+  }
+
+  /**
    * 获取指定端口的服务器
    * @param port 端口号
    * @returns 服务器实例或 undefined
@@ -435,17 +462,20 @@ function parseArgs(): ServerConfig & GlobalConfig {
         case 'cors':
           config.cors = value !== 'false'
           break
+        case 'full-reload':
+          config.fullReload = value !== 'false'
+          break
         case 'static-dirs':
           config.staticDirs = (value || '').split(',').map(p => p.trim())
+          break
+        case 'remove-src-prefix':
+          config.removeSrcPrefix = (value || '').split(',').map(p => p.trim()).filter(p => p.length > 0)
           break
         case 'log-level':
           config.logLevel = value as any
           break
         case 'log-num-backups':
           config.logNumBackups = parseInt(value || '30') || 30
-          break
-        case 'full-reload':
-          config.fullReload = value !== 'false'
           break
         case 'start-port':
           config.startPort = parseInt(value || '6251')
@@ -472,14 +502,15 @@ if (import.meta.main) {
     console.error('  node . <html-file> [watch-paths...] [options]')
     console.error('')
     console.error('Options:')
-    console.error('  --port=6251              Server port')
-    console.error('  --open-browser=true      Open browser automatically')
-    console.error('  --cors=true              Enable CORS')
-    console.error('  --full-reload=true       Enable full page reload on file changes')
-    console.error('  --static-dirs=dir1,dir2  Additional static directories')
-    console.error('  --start-port=6251        Start port for auto-increment')
-    console.error('  --log-level=info         Log level (trace, debug, info, warn, error, fatal, mark)')
-    console.error('  --log-num-backups=30     Number of days to keep log files')
+    console.error('  --port=6251                Server port')
+    console.error('  --open-browser=true        Open browser automatically')
+    console.error('  --cors=true                Enable CORS')
+    console.error('  --full-reload=true         Enable full page reload on file changes')
+    console.error('  --static-dirs=dir1,dir2    Additional static directories')
+    console.error('  --remove-src-prefix=p1,p2  Prefixes to remove from resource paths in HTML')
+    console.error('  --start-port=6251          Start port for auto-increment')
+    console.error('  --log-level=info           Log level (trace, debug, info, warn, error, fatal, mark)')
+    console.error('  --log-num-backups=30       Number of days to keep log files')
     console.error('')
     console.error('Example:')
     console.error('  node . example/index.html example --log-level=debug --port=6251')

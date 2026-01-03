@@ -71,6 +71,13 @@ export interface ServerConfig {
    */
   fullReload?: boolean
 
+  /**
+   * 需要从目标html中的资源路径中移除的前缀
+   * @description 修改文件访问路径，如将绝对路径转换为相对路径
+   * @example ['public/']
+   */
+  removeSrcPrefix?: string[]
+
 }
 
 export interface ClientMessage {

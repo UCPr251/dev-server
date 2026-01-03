@@ -16,7 +16,7 @@
     "esModuleInterop": true,
     "sourceMap": false,
     "skipLibCheck": true,
-    "removeComments": true,
+    "removeComments": false,
     "forceConsistentCasingInFileNames": true
   },
   "include": [
