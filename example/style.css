@@ -1,0 +1,579 @@
+/* 深色调主题变量 */
+:root {
+  --primary-color: #ff6262;
+  --primary-dark: #564fd1;
+  --secondary-color: #36d1dc;
+  --bg-primary: #0f1117;
+  --bg-secondary: #1a1d28;
+  --bg-card: #222533;
+  --bg-hover: #2a2e3e;
+  --text-primary: #e2e8f0;
+  --text-secondary: #a0aec0;
+  --text-muted: #718096;
+  --border-color: #2d3748;
+  --success-color: #48bb78;
+  --warning-color: #ed8936;
+  --error-color: #f56565;
+  --info-color: #4299e1;
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.3);
+  --border-radius: 12px;
+  --border-radius-sm: 8px;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* 基础重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(108, 99, 255, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(54, 209, 220, 0.05) 0%, transparent 20%);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* 头部样式 */
+.header {
+  text-align: center;
+  padding: 3rem 0 2rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.logo i {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+}
+
+.logo h1 {
+  font-size: 2.5rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+}
+
+.version {
+  background-color: var(--bg-card);
+  color: var(--secondary-color);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: rgba(72, 187, 120, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(72, 187, 120, 0.3);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--success-color);
+  position: relative;
+}
+
+.status-dot.active {
+  animation: pulse 2s infinite;
+}
+
+.status-dot.active::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: var(--success-color);
+  opacity: 0.5;
+  animation: pulse-ring 2s infinite;
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* 卡片样式 */
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-light);
+}
+
+.card h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.card h2 i {
+  color: var(--primary-color);
+}
+
+/* 介绍卡片 */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature {
+  background-color: var(--bg-secondary);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.feature:hover {
+  background-color: var(--bg-hover);
+}
+
+.feature i {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.feature h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.feature p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* 代码块样式 */
+.code-block {
+  position: relative;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-sm);
+  margin: 1rem 0;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  /* 改为 hidden */
+}
+
+.code-block pre {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  padding: 1.5rem;
+  overflow-x: auto;
+  /* 让 pre 元素可滚动 */
+  max-height: 300px;
+  /* 可选：限制最大高度 */
+}
+
+.code-block code {
+  font-family: var(--font-mono);
+  color: var(--secondary-color);
+}
+
+.copy-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(108, 99, 255, 0.1);
+  color: var(--primary-color);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  z-index: 10;
+  /* 确保按钮在最上层 */
+}
+
+.copy-btn:hover {
+  background-color: rgba(108, 99, 255, 0.2);
+}
+
+.copy-btn i {
+  margin-right: 0.25rem;
+}
+
+/* 参数表格样式 */
+.table-container {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.params-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+}
+
+.params-table thead {
+  background-color: var(--bg-secondary);
+}
+
+.params-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--border-color);
+}
+
+.params-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.params-table tr:hover {
+  background-color: rgba(108, 99, 255, 0.05);
+}
+
+.params-table code {
+  background-color: rgba(108, 99, 255, 0.1);
+  color: var(--primary-color);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+/* API 部分样式 */
+.api-section {
+  margin-bottom: 2rem;
+}
+
+.api-section h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.api-section p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* 测试区域样式 */
+.test-area {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-sm);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.current-time,
+.refresh-log {
+  margin-bottom: 1.5rem;
+}
+
+.current-time span {
+  font-family: var(--font-mono);
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
+.refresh-log ul {
+  list-style-type: none;
+  padding-left: 1rem;
+}
+
+.refresh-log li {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border-color);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.refresh-log li:last-child {
+  border-bottom: none;
+}
+
+.test-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.test-btn {
+  background-color: rgba(108, 99, 255, 0.1);
+  color: var(--primary-color);
+  border: 1px solid rgba(108, 99, 255, 0.3);
+  border-radius: var(--border-radius-sm);
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.test-btn:hover {
+  background-color: rgba(108, 99, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.test-btn#css-test {
+  background-color: rgba(66, 153, 225, 0.1);
+  color: var(--info-color);
+  border-color: rgba(66, 153, 225, 0.3);
+}
+
+.test-btn#js-test {
+  background-color: rgba(245, 101, 101, 0.1);
+  color: var(--error-color);
+  border-color: rgba(245, 101, 101, 0.3);
+}
+
+.test-btn#full-test {
+  background-color: rgba(237, 137, 54, 0.1);
+  color: var(--warning-color);
+  border-color: rgba(237, 137, 54, 0.3);
+}
+
+.note {
+  background-color: rgba(66, 153, 225, 0.1);
+  border-left: 4px solid var(--info-color);
+  padding: 1rem;
+  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.note i {
+  color: var(--info-color);
+  margin-top: 0.1rem;
+}
+
+.note p {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+/* 页脚样式 */
+.footer {
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  margin-top: 3rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-info h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.footer-info p {
+  color: var(--text-secondary);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+}
+
+.copyright {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* 通知样式 */
+.notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: var(--success-color);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: var(--border-radius-sm);
+  box-shadow: var(--shadow);
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .header {
+    padding: 2rem 0 1.5rem;
+  }
+
+  .logo h1 {
+    font-size: 2rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .test-buttons {
+    flex-direction: column;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .card h2 {
+    font-size: 1.3rem;
+  }
+
+  .params-table {
+    font-size: 0.85rem;
+  }
+
+  .params-table th,
+  .params-table td {
+    padding: 0.75rem 0.5rem;
+  }
+}

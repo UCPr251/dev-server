@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevServer 开发工具</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <header class="header">
+      <div class="logo">
+        <i class="fas fa-sync-alt"></i>
+        <h1>DevServer</h1>
+        <span class="version">v1.0.0</span>
+      </div>
+      <p class="tagline">智能热重载开发服务器</p>
+      <div class="status-indicator">
+        <span class="status-dot active"></span>
+        <span class="status-text">开发服务器运行中</span>
+      </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+      <!-- 项目介绍 -->
+      <section class="card intro-card">
+        <h2><i class="fas fa-info-circle"></i> 项目介绍</h2>
+        <p>DevServer 是一个基于 Node.js 的开发服务器工具，提供智能文件监听和自动刷新功能。它能够显著提升前端开发效率，支持局部刷新和完整页面重载。</p>
+        <div class="features">
+          <div class="feature">
+            <i class="fas fa-bolt"></i>
+            <h3>热重载</h3>
+            <p>文件修改后自动刷新浏览器，无需手动操作</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-code"></i>
+            <h3>智能刷新</h3>
+            <p>CSS文件变更时仅刷新样式，JS文件变更时智能重载</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-cogs"></i>
+            <h3>可配置</h3>
+            <p>支持端口、CORS、静态目录等多种配置选项</p>
+          </div>
+          <div class="feature">
+            <i class="fas fa-desktop"></i>
+            <h3>跨平台</h3>
+            <p>支持 Windows、macOS 和 Linux 系统</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 使用方法 -->
+      <section class="card usage-card">
+        <h2><i class="fas fa-terminal"></i> 使用方法</h2>
+        <div class="command-example">
+          <h3>基本命令</h3>
+          <div class="code-block">
+            <pre><code>node . example/index.html example --log-level=debug</code></pre>
+            <button class="copy-btn" data-clipboard-text="node . example/index.html example --log-level=debug">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="command-example">
+          <h3>带参数的完整命令</h3>
+          <div class="code-block">
+            <pre><code>node . example/index.html example --port=8080 --open-browser=true --cors=true --full-reload=false --static-dirs=assets,images --start-port=6251 --log-level=info</code></pre>
+            <button class="copy-btn"
+              data-clipboard-text="node . example/index.html example --port=8080 --open-browser=true --cors=true --full-reload=false --static-dirs=assets,images --start-port=6251 --log-level=info">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 参数说明 -->
+      <section class="card params-card">
+        <h2><i class="fas fa-sliders-h"></i> 参数说明</h2>
+        <div class="table-container">
+          <table class="params-table">
+            <thead>
+              <tr>
+                <th>参数</th>
+                <th>说明</th>
+                <th>默认值</th>
+                <th>示例</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>&lt;html-file&gt;</code></td>
+                <td>目标HTML文件路径</td>
+                <td>必填</td>
+                <td><code>example/index.html</code></td>
+              </tr>
+              <tr>
+                <td><code>&lt;watch-paths&gt;</code></td>
+                <td>监听变化的文件或目录</td>
+                <td>HTML文件所在目录</td>
+                <td><code>example src</code></td>
+              </tr>
+              <tr>
+                <td><code>--port</code></td>
+                <td>服务器端口</td>
+                <td><code>6251</code></td>
+                <td><code>--port=8080</code></td>
+              </tr>
+              <tr>
+                <td><code>--open-browser</code></td>
+                <td>自动打开浏览器</td>
+                <td><code>true</code></td>
+                <td><code>--open-browser=false</code></td>
+              </tr>
+              <tr>
+                <td><code>--cors</code></td>
+                <td>启用CORS跨域支持</td>
+                <td><code>true</code></td>
+                <td><code>--cors=false</code></td>
+              </tr>
+              <tr>
+                <td><code>--full-reload</code></td>
+                <td>启用完整页面刷新</td>
+                <td><code>false</code></td>
+                <td><code>--full-reload=true</code></td>
+              </tr>
+              <tr>
+                <td><code>--static-dirs</code></td>
+                <td>额外静态资源目录</td>
+                <td>空</td>
+                <td><code>--static-dirs=assets,images</code></td>
+              </tr>
+              <tr>
+                <td><code>--start-port</code></td>
+                <td>自动分配端口的起始值</td>
+                <td><code>6251</code></td>
+                <td><code>--start-port=7000</code></td>
+              </tr>
+              <tr>
+                <td><code>--log-level</code></td>
+                <td>日志输出级别</td>
+                <td><code>info</code></td>
+                <td><code>--log-level=debug</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- API 说明 -->
+      <section class="card api-card">
+        <h2><i class="fas fa-code"></i> API 说明</h2>
+
+        <div class="api-section">
+          <h3>DevServer 类</h3>
+          <p>核心服务器类，提供开发服务器功能</p>
+          <div class="code-block">
+            <pre><code class="javascript">import { DevServer } from './dist/index.js';
+
+const config = {
+  htmlPath: 'example/index.html',
+  watchPaths: ['example'],
+  port: 6251,
+  openBrowser: true,
+  cors: true,
+  fullReload: false,
+  staticDirs: ['assets']
+};
+
+const server = new DevServer(config);
+server.start().then(() => {
+  console.log('Server started!');
+});</code></pre>
+          </div>
+        </div>
+
+        <div class="api-section">
+          <h3>DevServerManager 类</h3>
+          <p>自动管理多个服务器实例，支持端口自动分配</p>
+          <div class="code-block">
+            <pre><code class="javascript">import { DevServerManager } from './dist/index.js';
+
+const manager = new DevServerManager({
+  startPort: 6251,
+  logLevel: 'info'
+});
+
+// 自动分配端口（未指定端口时）
+const server1 = await manager.start({
+  htmlPath: 'example/index.html',
+  watchPaths: ['example']
+});
+
+// 指定端口
+const server2 = await manager.start({
+  htmlPath: 'another/index.html',
+  watchPaths: ['another'],
+  port: 8080
+});
+
+// 停止服务器
+await manager.stop(server2.config.port);
+await manager.stopAll();</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- 文件变更测试 -->
+      <section class="card test-card">
+        <h2><i class="fas fa-vial"></i> 文件变更测试</h2>
+        <p>修改此文件内容并保存，查看自动刷新效果：</p>
+        <div class="test-area">
+          <div class="current-time">
+            <strong>当前时间戳：</strong>
+            <span id="timestamp">加载中...</span>
+          </div>
+          <div class="refresh-log">
+            <strong>刷新记录：</strong>
+            <ul id="refresh-log">
+              <li>页面初始加载</li>
+            </ul>
+          </div>
+          <div class="test-buttons">
+            <button id="css-test" class="test-btn">
+              <i class="fas fa-paint-brush"></i> 测试CSS刷新
+            </button>
+            <button id="js-test" class="test-btn">
+              <i class="fas fa-code"></i> 测试JS刷新
+            </button>
+            <button id="full-test" class="test-btn">
+              <i class="fas fa-sync-alt"></i> 测试完整刷新
+            </button>
+          </div>
+        </div>
+        <div class="note">
+          <i class="fas fa-info-circle"></i>
+          修改此页面的CSS或JS文件，服务器会自动检测并刷新相应部分。
+        </div>
+      </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-info">
+          <h3>DevServer 开发工具</h3>
+          <p>基于 Node.js 的智能热重载开发服务器</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://github.com" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+          <a href="https://npmjs.com" target="_blank"><i class="fab fa-npm"></i> NPM</a>
+          <a href="#" id="docs-link"><i class="fas fa-book"></i> 文档</a>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>© 2023 DevServer Project. 这是一个示例页面。</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- 通知弹窗 -->
+  <div id="notification" class="notification">
+    <div class="notification-content">
+      <i class="fas fa-check-circle"></i>
+      <span id="notification-text">已复制到剪贴板</span>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

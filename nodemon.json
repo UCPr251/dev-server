@@ -1,0 +1,12 @@
+{
+  "ignore": [
+    "dist",
+    "node_modules/*",
+    "test.js"
+  ],
+  "restartable": "r",
+  "watch": [
+    "src/*.ts"
+  ],
+  "ext": "ts"
+}
