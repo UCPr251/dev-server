@@ -90,12 +90,7 @@ export default function () {
           break
         case 'html':
           // HTML文件变化时检查是否是当前页面
-          if (this.isCurrentPage(filePath)) {
-            this.reloadPage({ reason: 'HTML changed' })
-          } else {
-            // 不是当前页面，仅通知
-            this.showNotification('Related HTML file changed')
-          }
+          this.reloadPage({ reason: 'HTML changed' })
           break
         case 'png':
         case 'jpg':

@@ -180,7 +180,7 @@ export class DevServer {
   private setupFileWatcher(): void {
     try {
       this.watcher = chokidar.watch(this.config.watchPaths, {
-        ignored: /(^|[\/\\])\../, // 忽略隐藏文件
+        ignored: /(^|[\/\\])\..|\.scss$|\.css\.map$/, // 忽略隐藏文件和scss文件和css map文件
         ignoreInitial: true,
         persistent: true,
         awaitWriteFinish: {
